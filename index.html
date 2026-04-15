@@ -101,6 +101,32 @@
 
     </section><!-- /Hero Section -->
 
+
+    <!-- Hand-Controlled Dust Simulation Section -->
+    <section id="dust-lab" class="section">
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Interactive Lab</span>
+        <h2>Hand-Controlled Dust Particle Simulation</h2>
+        <p>Use your webcam and move your hand to push glowing dust around the screen.</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="card-body p-0 position-relative">
+            <video id="dust-video" class="w-100 d-block" autoplay playsinline muted></video>
+            <canvas id="dust-canvas" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
+          </div>
+          <div class="card-footer d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div id="dust-status" class="small text-muted">Camera is off.</div>
+            <div class="d-flex gap-2">
+              <button id="dust-start" class="btn btn-primary btn-sm" type="button">Start Camera</button>
+              <button id="dust-stop" class="btn btn-outline-secondary btn-sm" type="button" disabled>Stop</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Hand-Controlled Dust Simulation Section -->
+
     <!-- About Section -->
     <section id="about" class="about section">
 
@@ -875,8 +901,13 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="dust-sim.js"></script>
+
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="main.js"></script>
 
 </body>
 
