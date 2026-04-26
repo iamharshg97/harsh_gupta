@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EMIFlix app icon">
+  <defs>
+    <linearGradient id="bg" x1="56" y1="40" x2="456" y2="488" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#250006"/>
+      <stop offset="0.48" stop-color="#07070a"/>
+      <stop offset="1" stop-color="#101018"/>
+    </linearGradient>
+    <linearGradient id="ticket" x1="110" y1="120" x2="398" y2="408" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff4d57"/>
+      <stop offset="0.45" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#8d030a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="158" y1="172" x2="350" y2="348" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe0a1"/>
+      <stop offset="1" stop-color="#f5b342"/>
+    </linearGradient>
+    <filter id="shadow" x="58" y="80" width="396" height="396" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="24" stdDeviation="26" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M52 92h408M52 420h408" stroke="#ffffff" stroke-opacity="0.08" stroke-width="18" stroke-linecap="round"/>
+  <path d="M88 112v288M424 112v288" stroke="#ffffff" stroke-opacity="0.10" stroke-width="10" stroke-dasharray="20 24" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <path d="M136 142h240c18 0 32 14 32 32v42c-25 8-43 31-43 58s18 50 43 58v42c0 18-14 32-32 32H136c-18 0-32-14-32-32v-42c25-8 43-31 43-58s-18-50-43-58v-42c0-18 14-32 32-32Z" fill="url(#ticket)"/>
+    <path d="M178 192h156" stroke="#ffffff" stroke-opacity="0.34" stroke-width="14" stroke-linecap="round"/>
+    <path d="M178 342h156" stroke="#ffffff" stroke-opacity="0.22" stroke-width="14" stroke-linecap="round"/>
+    <path d="M188 292c26-46 58-46 84 0s58 46 84 0" fill="none" stroke="url(#gold)" stroke-width="24" stroke-linecap="round"/>
+    <circle cx="256" cy="254" r="34" fill="#07070a"/>
+    <path d="M244 235v38l32-19-32-19Z" fill="#ffffff"/>
+  </g>
+</svg>

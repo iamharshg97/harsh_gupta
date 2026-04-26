@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loan Strategy Studio</title>
+    <meta name="theme-color" content="#050506">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Loan Studio">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/app-icon-192.png">
+    <link rel="apple-touch-icon" href="assets/app-icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+      <section class="topbar" aria-label="EMI summary">
+        <div>
+          <p class="eyebrow">Financial Strategy Dashboard</p>
+          <h1>Loan Strategy Studio</h1>
+          <p class="mobile-tagline">A practical EMI, repayment, and prepayment planner for choosing the smartest loan path.</p>
+        </div>
+        <div class="summary-strip">
+          <div>
+            <span>Monthly EMI</span>
+            <strong id="summaryEmi">-</strong>
+          </div>
+          <div>
+            <span>Interest Rate</span>
+            <strong id="summaryRate">-</strong>
+          </div>
+          <div>
+            <span>Monthly Rate</span>
+            <strong id="summaryMonthlyRate">-</strong>
+          </div>
+          <div>
+            <span>Payment Starts</span>
+            <strong id="summaryStartDate">-</strong>
+          </div>
+          <div>
+            <span>Maturity Date</span>
+            <strong id="summaryMaturityDate">-</strong>
+          </div>
+        </div>
+      </section>
+
+      <nav class="app-tabs" aria-label="Dashboard views">
+        <button class="tab-btn active" type="button" data-view="plannerDashboard">Loan Planner</button>
+        <button class="tab-btn" type="button" data-view="repaymentDashboard">Repayment Tracker</button>
+        <button class="tab-btn" type="button" data-view="closureDashboard">Close Early</button>
+      </nav>
+
+      <section id="plannerDashboard" class="dashboard-view active">
+      <section class="dashboard-grid">
+        <section class="controls-panel" aria-label="EMI parameters">
+          <div class="panel-title">
+            <h2>Control Deck</h2>
+            <span id="solveStatus" class="status-pill">Ready</span>
+          </div>
+
+          <div class="control-grid">
+            <article class="control-card" data-key="principal">
+              <div class="control-head">
+                <label for="principalInput">Loan Amount</label>
+                <button class="auto-btn" type="button" data-auto="principal" aria-label="Auto calculate loan amount">Auto</button>
+              </div>
+              <input id="principalRange" type="range" min="10000" max="20000000" step="10000" data-key="principal">
+              <div class="range-meta">
+                <span>Slider up to Rs 2,00,00,000.00. Type up to Rs 1,00,00,00,00,00,000.00.</span>
+              </div>
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="principalInput" type="text" data-key="principal" inputmode="decimal" autocomplete="off">
+              </div>
+            </article>
+
+            <article class="control-card" data-key="annualRate">
+              <div class="control-head">
+                <label for="annualRateInput">Interest Yearly</label>
+                <button class="auto-btn" type="button" data-auto="annualRate" aria-label="Auto calculate yearly interest">Auto</button>
+              </div>
+              <input id="annualRateRange" type="range" min="0" max="30" step="0.05" data-key="annualRate">
+              <div class="range-meta">
+                <span>Slider up to 30%. Type up to 500%.</span>
+              </div>
+              <div class="input-line">
+                <input id="annualRateInput" type="text" data-key="annualRate" inputmode="decimal" autocomplete="off">
+                <span>%</span>
+              </div>
+            </article>
+
+            <article class="control-card" data-key="durationMonths">
+              <div class="control-head">
+                <label for="durationRange">Duration</label>
+                <button class="auto-btn" type="button" data-auto="durationMonths" aria-label="Auto calculate duration">Auto</button>
+              </div>
+              <input id="durationRange" type="range" min="1" max="480" step="1" data-key="durationMonths">
+              <div class="range-meta">
+                <span>Slider up to 40 years. Type up to 500 years.</span>
+              </div>
+              <div class="duration-inputs">
+                <div class="input-line">
+                  <input id="durationYearsInput" type="number" min="0" max="500" step="1" inputmode="numeric">
+                  <span>Years</span>
+                </div>
+                <div class="input-line">
+                  <input id="durationMonthInput" type="number" min="0" max="11" step="1" inputmode="numeric">
+                  <span>Months</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="control-card" data-key="monthlyEmi">
+              <div class="control-head">
+                <label for="monthlyEmiInput">Monthly EMI</label>
+                <button class="auto-btn" type="button" data-auto="monthlyEmi" aria-label="Auto calculate monthly EMI">Auto</button>
+              </div>
+              <input id="monthlyEmiRange" type="range" min="0" max="500000" step="100" data-key="monthlyEmi">
+              <div class="range-meta">
+                <span id="emiCapLabel">Practical range: -</span>
+              </div>
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="monthlyEmiInput" type="text" data-key="monthlyEmi" inputmode="decimal" autocomplete="off">
+              </div>
+            </article>
+
+            <article class="control-card calendar-card" data-key="loanCalendar">
+              <div class="control-head">
+                <label for="borrowedDateInput">Holiday Period</label>
+                <span class="calc-badge">Step 2</span>
+              </div>
+              <div class="range-meta">
+                <span>Use this when EMI starts after a study, construction, or other holiday period.</span>
+              </div>
+              <div class="input-line date-line">
+                <span>Borrowed</span>
+                <input id="borrowedDateInput" type="date" autocomplete="off">
+              </div>
+              <div class="input-line date-line">
+                <span>Current</span>
+                <input id="currentDateInput" type="date" autocomplete="off">
+              </div>
+              <div class="input-line select-line">
+                <span>Holiday?</span>
+                <select id="hasHolidayInput">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+              <input id="moratoriumRange" type="range" min="0" max="120" step="1">
+              <div class="range-meta">
+                <span>Slider up to 10 years. Type up to 500 years.</span>
+              </div>
+              <div class="duration-inputs">
+                <div class="input-line">
+                  <input id="moratoriumYearsInput" type="number" min="0" max="500" step="1" inputmode="numeric">
+                  <span>Delay Years</span>
+                </div>
+                <div class="input-line">
+                  <input id="moratoriumMonthInput" type="number" min="0" max="11" step="1" inputmode="numeric">
+                  <span>Months</span>
+                </div>
+              </div>
+              <div class="input-line select-line">
+                <span>Holiday Mode</span>
+                <select id="holidayModeInput">
+                  <option value="capitalize">Pay Nothing</option>
+                  <option value="interestOnly">Pay Interest Only</option>
+                  <option value="principalOnly">Pay Principal Only</option>
+                </select>
+              </div>
+              <input id="holidayPrincipalRange" type="range" min="0" max="500000" step="1000">
+              <div class="range-meta">
+                <span id="holidayPrincipalCap">Used only for principal-only holiday payments.</span>
+              </div>
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="holidayPrincipalInput" type="text" inputmode="decimal" autocomplete="off">
+              </div>
+              <div class="range-meta">
+                <span>Calculated opening principal for the first EMI after holiday.</span>
+              </div>
+              <input id="postHolidayPrincipalRange" type="range" min="0" max="5000000" step="1000" disabled>
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="postHolidayPrincipalInput" type="text" readonly aria-readonly="true">
+              </div>
+            </article>
+
+            <article class="control-card" data-key="totalInterest">
+              <div class="control-head">
+                <label for="totalInterestInput">Total Interest</label>
+                <span class="calc-badge">Calculated</span>
+              </div>
+              <input id="totalInterestRange" type="hidden" data-key="totalInterest">
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="totalInterestInput" type="text" data-key="totalInterest" readonly aria-readonly="true">
+              </div>
+            </article>
+
+            <article class="control-card" data-key="totalPaid">
+              <div class="control-head">
+                <label for="totalPaidInput">Total Amount Paid</label>
+                <span class="calc-badge">Calculated</span>
+              </div>
+              <input id="totalPaidRange" type="hidden" data-key="totalPaid">
+              <div class="input-line">
+                <span>Rs</span>
+                <input id="totalPaidInput" type="text" data-key="totalPaid" readonly aria-readonly="true">
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="visual-panel" aria-label="Loan graphics">
+          <div class="panel-title">
+            <h2>Payment Storyline</h2>
+            <span id="durationBadge" class="status-pill">-</span>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric">
+              <span>Borrowed Amount</span>
+              <strong id="metricPrincipal">-</strong>
+            </div>
+            <div class="metric">
+              <span>Principal At EMI Start</span>
+              <strong id="metricOpeningPrincipal">-</strong>
+            </div>
+            <div class="metric">
+              <span>Interest</span>
+              <strong id="metricInterest">-</strong>
+            </div>
+            <div class="metric">
+              <span>Total Paid</span>
+              <strong id="metricTotal">-</strong>
+            </div>
+          </div>
+
+          <div class="insights-grid" aria-label="Loan insights">
+            <div class="insight-card">
+              <span>Interest Load</span>
+              <strong id="insightLoad">-</strong>
+            </div>
+            <div class="insight-card">
+              <span>Halfway Point</span>
+              <strong id="insightHalfway">-</strong>
+            </div>
+            <div class="insight-card">
+              <span>First EMI Split</span>
+              <strong id="insightFirstSplit">-</strong>
+            </div>
+            <div class="insight-card">
+              <span>Final Payment</span>
+              <strong id="insightFinalPayment">-</strong>
+            </div>
+            <div class="insight-card">
+              <span>Moratorium Interest</span>
+              <strong id="insightMoratorium">-</strong>
+            </div>
+            <div class="insight-card">
+              <span>+10% EMI Saves</span>
+              <strong id="insightSavings">-</strong>
+            </div>
+          </div>
+
+          <div class="chart-layout">
+            <div class="chart-box mix-wrap">
+              <div class="chart-title">
+                <span>Repayment Mix</span>
+                <strong id="interestShare">-</strong>
+              </div>
+              <canvas id="mixChart" width="420" height="320" aria-label="Principal and interest repayment mix"></canvas>
+            </div>
+            <div class="chart-box timeline-wrap">
+              <div class="chart-title">
+                <span>Balance Runway</span>
+                <strong id="runwayLabel">-</strong>
+              </div>
+              <canvas id="timelineChart" width="900" height="420" aria-label="Principal and interest over duration"></canvas>
+              <div id="chartTooltip" class="chart-tooltip" hidden></div>
+            </div>
+          </div>
+        </section>
+      </section>
+      </section>
+
+      <section id="repaymentDashboard" class="dashboard-view">
+        <section class="dashboard-grid repayment-grid">
+          <section class="controls-panel" aria-label="Repayment inputs">
+            <div class="panel-title">
+              <h2>Repayment Tracker</h2>
+              <span id="repayStatus" class="status-pill">Live from planner</span>
+            </div>
+
+            <div class="control-grid">
+              <article class="control-card" data-repay-key="remainingPrincipal">
+                <div class="control-head">
+                  <label for="repayRemainingPrincipalInput">Total Principal Remaining</label>
+                  <span class="calc-badge">Editable</span>
+                </div>
+                <input id="repayRemainingPrincipalRange" type="range" min="0" max="1000000" step="1000">
+                <div class="range-meta">
+                  <span id="repayRemainingCap">Includes borrowed amount plus unpaid holiday interest minus principal already paid.</span>
+                </div>
+                <div class="input-line">
+                  <span>Rs</span>
+                  <input id="repayRemainingPrincipalInput" type="text" inputmode="decimal" autocomplete="off">
+                </div>
+              </article>
+
+              <article class="control-card" data-repay-key="maturityDate">
+                <div class="control-head">
+                  <label for="repayMaturityDateInput">Current Maturity Date</label>
+                  <span class="calc-badge">Editable</span>
+                </div>
+                <div class="range-meta">
+                  <span>Enter lender/current maturity after all historical prepayments.</span>
+                </div>
+                <div class="input-line date-line">
+                  <span>Maturity</span>
+                  <input id="repayMaturityDateInput" type="date" autocomplete="off">
+                </div>
+              </article>
+
+              <article class="control-card" data-repay-key="prepayment">
+                <div class="control-head">
+                  <label for="prepaymentInput">Prepayment Amount</label>
+                  <span class="calc-badge">Optional</span>
+                </div>
+                <input id="prepaymentRange" type="range" min="0" max="1000000" step="1000">
+                <div class="range-meta">
+                  <span id="prepayCap">Cannot exceed remaining principal.</span>
+                </div>
+                <div class="input-line">
+                  <span>Rs</span>
+                  <input id="prepaymentInput" type="text" inputmode="decimal" autocomplete="off">
+                </div>
+              </article>
+
+            </div>
+          </section>
+
+          <section class="visual-panel" aria-label="Repayment strategy results">
+            <div class="panel-title">
+              <h2>Prepayment Decision</h2>
+              <span id="recommendBadge" class="status-pill">Add prepayment</span>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric">
+                <span>Remaining Principal</span>
+                <strong id="remainingPrincipalMetric">-</strong>
+              </div>
+              <div class="metric">
+                <span>Remaining Tenure</span>
+                <strong id="remainingTenureMetric">-</strong>
+              </div>
+              <div class="metric">
+                <span>Remaining Interest</span>
+                <strong id="remainingInterestMetric">-</strong>
+              </div>
+            </div>
+
+            <div class="strategy-grid">
+              <article id="tenureOption" class="strategy-card">
+                <span>Option A</span>
+                <h3>Reduce Tenure</h3>
+                <strong id="tenureOptionHeadline">-</strong>
+                <p id="tenureOptionDetail">-</p>
+              </article>
+              <article id="emiOption" class="strategy-card">
+                <span>Option B</span>
+                <h3>Reduce EMI</h3>
+                <strong id="emiOptionHeadline">-</strong>
+                <p id="emiOptionDetail">-</p>
+              </article>
+            </div>
+
+            <div class="insights-grid repayment-insights" aria-label="Repayment insights">
+              <div class="insight-card">
+                <span>Best Interest Saving</span>
+                <strong id="bestSavingMetric">-</strong>
+              </div>
+              <div class="insight-card">
+                <span>New EMI If Reduced</span>
+                <strong id="newEmiMetric">-</strong>
+              </div>
+              <div class="insight-card">
+                <span>Tenure Saved</span>
+                <strong id="tenureSavedMetric">-</strong>
+              </div>
+              <div class="insight-card">
+                <span>Current Maturity</span>
+                <strong id="currentMaturityMetric">-</strong>
+              </div>
+              <div class="insight-card">
+                <span>Tenure Option Maturity</span>
+                <strong id="tenureMaturityMetric">-</strong>
+              </div>
+              <div class="insight-card">
+                <span>EMI Option Maturity</span>
+                <strong id="emiMaturityMetric">-</strong>
+              </div>
+            </div>
+
+            <div class="chart-layout repayment-chart-layout">
+              <div class="chart-box repayment-chart-wrap">
+                <div class="chart-title">
+                  <span>Strategy Comparison</span>
+                  <strong>Lower is better</strong>
+                </div>
+                <canvas id="repaymentChart" width="900" height="420" aria-label="Prepayment strategy comparison"></canvas>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section id="closureDashboard" class="dashboard-view">
+        <section class="dashboard-grid repayment-grid">
+          <section class="controls-panel" aria-label="Target closure inputs">
+            <div class="panel-title">
+              <h2>Early Closure Target</h2>
+              <span id="closureStatus" class="status-pill">Choose target date</span>
+            </div>
+
+            <div class="control-grid">
+              <article class="control-card" data-repay-key="closure">
+                <div class="control-head">
+                  <label for="desiredClosureDateInput">Desired Closure Date</label>
+                  <span class="calc-badge">Editable</span>
+                </div>
+                <div class="range-meta">
+                  <span>Calculated from current date, remaining principal, rate, and EMI.</span>
+                </div>
+                <div class="input-line date-line">
+                  <span>Close By</span>
+                  <input id="desiredClosureDateInput" type="date" autocomplete="off">
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="visual-panel" aria-label="Early closure strategy results">
+            <div class="panel-title">
+              <h2>Close Early Strategy</h2>
+              <span id="closureBadge" class="status-pill">Target strategy</span>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric">
+                <span>Remaining Principal</span>
+                <strong id="closurePrincipalMetric">-</strong>
+              </div>
+              <div class="metric">
+                <span>Target Tenure</span>
+                <strong id="closureTenureMetric">-</strong>
+              </div>
+              <div class="metric">
+                <span>Required EMI</span>
+                <strong id="closureRequiredEmiMetric">-</strong>
+              </div>
+              <div class="metric">
+                <span>Best Interest Saving</span>
+                <strong id="closureBestSavingMetric">-</strong>
+              </div>
+            </div>
+
+            <div class="strategy-grid closure-strategy-grid" aria-label="Target closure strategies">
+              <article id="monthlyStrategyCard" class="strategy-card good">
+                <span>Monthly Start</span>
+                <h3>Extra Principal</h3>
+                <strong id="targetMonthlyExtraMetric">-</strong>
+                <p id="targetMonthlyExtraDetail">-</p>
+              </article>
+              <article id="weeklyStrategyCard" class="strategy-card good">
+                <span>Weekly Start</span>
+                <h3>Extra Principal</h3>
+                <strong id="targetWeeklyExtraMetric">-</strong>
+                <p id="targetWeeklyExtraDetail">-</p>
+              </article>
+              <article id="yearlyStrategyCard" class="strategy-card caution">
+                <span>Yearly Start</span>
+                <h3>Annual Prepay</h3>
+                <strong id="targetYearlyExtraMetric">-</strong>
+                <p id="targetYearlyExtraDetail">-</p>
+              </article>
+              <article id="lumpStrategyCard" class="strategy-card best">
+                <span>Fastest</span>
+                <h3>One-Time Now</h3>
+                <strong id="targetLumpMetric">-</strong>
+                <p id="targetLumpDetail">-</p>
+              </article>
+            </div>
+
+            <div class="chart-layout repayment-chart-layout">
+              <div class="chart-box repayment-chart-wrap">
+                <div class="chart-title">
+                  <span>Target Closure Strategies</span>
+                  <strong>Interest saved comparison</strong>
+                </div>
+                <canvas id="closureChart" width="900" height="420" aria-label="Target closure strategy comparison"></canvas>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
